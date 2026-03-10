@@ -292,11 +292,11 @@ function handleTerminalChatEvent(
   const runId = payload?.runId;
   if (runId && host.refreshSessionsAfterChat.has(runId)) {
     host.refreshSessionsAfterChat.delete(runId);
-    if (state === "final") {
-      void loadSessions(host as unknown as OpenClawApp, {
-        activeMinutes: CHAT_SESSIONS_ACTIVE_MINUTES,
-      });
-    }
+    // Always reload sessions after a reset command, not just on final state.
+    // This ensures the session list is updated even if the run ends in an error state.
+    void loadSessions(host as unknown as OpenClawApp, {
+      activeMinutes: CHAT_SESSIONS_ACTIVE_MINUTES,
+    });
   }
   // Reload history when tools were used so the persisted tool results
   // replace the now-cleared streaming state.
