@@ -1,5 +1,5 @@
 export function missingTargetMessage(provider: string, hint?: string): string {
-  return `Delivering to ${provider} requires target${formatTargetHint(hint)}`;
+  return `Delivering to ${provider} requires a target (recipient). Specify a target using the 'to' parameter.${formatTargetHint(hint)}`;
 }
 
 export function missingTargetError(provider: string, hint?: string): Error {
@@ -7,7 +7,7 @@ export function missingTargetError(provider: string, hint?: string): Error {
 }
 
 export function ambiguousTargetMessage(provider: string, raw: string, hint?: string): string {
-  return `Ambiguous target "${raw}" for ${provider}. Provide a unique name or an explicit id.${formatTargetHint(hint, true)}`;
+  return `Ambiguous target "${raw}" for ${provider}. Multiple matches found. Please provide a unique name or an explicit id (e.g., user:123456789 or chat:oc_xxx).${formatTargetHint(hint, true)}`;
 }
 
 export function ambiguousTargetError(provider: string, raw: string, hint?: string): Error {
@@ -15,7 +15,7 @@ export function ambiguousTargetError(provider: string, raw: string, hint?: strin
 }
 
 export function unknownTargetMessage(provider: string, raw: string, hint?: string): string {
-  return `Unknown target "${raw}" for ${provider}.${formatTargetHint(hint, true)}`;
+  return `Unknown target "${raw}" for ${provider}. The target was not found in the directory or address book.${formatTargetHint(hint, true)}`;
 }
 
 export function unknownTargetError(provider: string, raw: string, hint?: string): Error {
