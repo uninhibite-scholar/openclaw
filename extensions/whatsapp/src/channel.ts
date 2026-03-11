@@ -260,7 +260,9 @@ export const whatsappPlugin: ChannelPlugin<ResolvedWhatsAppAccount> = {
     supportsAction: ({ action }) => action === "react",
     handleAction: async ({ action, params, cfg, accountId }) => {
       if (action !== "react") {
-        throw new Error(`Action ${action} is not supported for provider ${meta.id}.`);
+        throw new Error(
+          `Action "${action}" is not supported for WhatsApp. Supported actions: react`,
+        );
       }
       const messageId = readStringParam(params, "messageId", {
         required: true,
