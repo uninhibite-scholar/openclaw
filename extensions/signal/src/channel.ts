@@ -39,7 +39,9 @@ const signalMessageActions: ChannelMessageActionAdapter = {
   handleAction: async (ctx) => {
     const ma = getSignalRuntime().channel.signal.messageActions;
     if (!ma?.handleAction) {
-      throw new Error("Signal message actions not available");
+      throw new Error(
+        "Signal message actions not available. Ensure Signal is properly configured and the gateway is running.",
+      );
     }
     return ma.handleAction(ctx);
   },
