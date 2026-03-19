@@ -196,8 +196,15 @@ export function resolveModelLabel(model?: unknown): string {
 }
 
 export function normalizeModelValue(label: string): string {
-  const match = label.match(/^(.+) \(\+\d+ fallback\)$/);
-  return match ? match[1] : label;
+  // Remove fallback suffix: "model (+N fallback)" -> "model"
+  const fallbackMatch = label.match(/^(.+) \(\+\d+ fallback\)$/);
+  if (fallbackMatch) {
+    label = fallbackMatch[1];
+  }
+  // Remove provider prefix if present: "provider/model" -> "provider/model" (keep it)
+  // The issue is that when switching models, the UI should use the full "provider/model" format
+  // Don't strip the provider prefix - it's needed for proper model identification
+  return label.trim();
 }
 
 export function resolveModelPrimary(model?: unknown): string | null {
