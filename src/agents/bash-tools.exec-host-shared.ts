@@ -133,15 +133,21 @@ export function resolveExecHostApprovalContext(params: {
     ask: params.ask,
   });
   const hostSecurity = minSecurity(params.security, approvals.agent.security);
-  // DESIGN DECISION: User-level tools.exec.ask=off takes precedence over exec-approvals.json policies.
-  // This allows users to disable exec prompts entirely in trusted environments (e.g., webchat/control-ui).
-  // SECURITY TRADE-OFF: A user setting tools.exec.ask=off in openclaw.json can bypass an admin-configured
-  // ask: "always" policy in exec-approvals.json. This is intentional: user opt-out wins over admin defaults.
-  // Admins requiring mandatory approvals should enforce this at the deployment level, not via exec-approvals.json.
-  const hostAsk =
-    params.ask === "off" || approvals.agent.ask === "off"
-      ? "off"
-      : maxAsk(params.ask, approvals.agent.ask);
+  // DESIGN DECISION: User-level tools.exec.ask=off takes precedence over admin policies.
+  // This allows users to disable exec prompts in trusted environments (e.g., webchat/control-ui).
+  // However, user cannot override admin's explicit "off" (security restriction).
+  // Priority order:
+  // 1. params.ask === "off" → "off" (user opt-out always wins)
+  // 2. approvals.agent.ask === "off" && params.ask !== "off" → "off" (admin restriction stands)
+  // 3. Otherwise → maxAsk(params.ask, approvals.agent.ask)
+  let hostAsk: string;
+  if (params.ask === "off") {
+    hostAsk = "off"; // User opt-out always wins
+  } else if (approvals.agent.ask === "off") {
+    hostAsk = "off"; // Admin restriction stands (user cannot override to "always")
+  } else {
+    hostAsk = maxAsk(params.ask, approvals.agent.ask);
+  }
   const askFallback = approvals.agent.askFallback;
   if (hostSecurity === "deny") {
     throw new Error(`exec denied: host=${params.host} security=deny`);
