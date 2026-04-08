@@ -237,6 +237,7 @@ export const ModelProviderSchema = z
     injectNumCtxForOpenAICompat: z.boolean().optional(),
     headers: z.record(z.string(), SecretInputSchema.register(sensitive)).optional(),
     authHeader: z.boolean().optional(),
+    timeoutSeconds: z.number().int().positive().optional(),
     models: z.array(ModelDefinitionSchema),
   })
   .strict();

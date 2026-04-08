@@ -749,7 +749,14 @@ export async function runEmbeddedAttempt(
   const resolvedWorkspace = resolveUserPath(params.workspaceDir);
   const prevCwd = process.cwd();
   const runAbortController = new AbortController();
-  ensureGlobalUndiciStreamTimeouts();
+  
+  // Use provider-specific timeout if configured, otherwise use agent default
+  const providerConfig = params.config?.models?.providers?.[params.provider];
+  const providerTimeoutSeconds = providerConfig?.timeoutSeconds;
+  const timeoutMs = providerTimeoutSeconds 
+    ? providerTimeoutSeconds * 1000 
+    : undefined;
+  ensureGlobalUndiciStreamTimeouts({ timeoutMs });
 
   log.debug(
     `embedded run start: runId=${params.runId} sessionId=${params.sessionId} provider=${params.provider} model=${params.modelId} thinking=${params.thinkLevel} messageChannel=${params.messageChannel ?? params.messageProvider ?? "unknown"}`,
