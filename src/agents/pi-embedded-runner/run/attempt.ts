@@ -345,8 +345,7 @@ export async function runEmbeddedAttempt(
   // active EnvHttpProxyAgent instead of being replaced by a bare proxy dispatcher.
   ensureGlobalUndiciEnvProxyDispatcher();
   const providerTimeoutSeconds =
-    (params.config?.models?.providers?.[params.provider] as { timeoutSeconds?: number } | undefined)
-      ?.timeoutSeconds;
+    params.config?.models?.providers?.[params.provider]?.timeoutSeconds;
   ensureGlobalUndiciStreamTimeouts(
     providerTimeoutSeconds != null ? { timeoutMs: providerTimeoutSeconds * 1000 } : undefined,
   );
