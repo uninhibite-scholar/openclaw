@@ -471,6 +471,7 @@ export const FIELD_LABELS: Record<string, string> = {
   "models.providers.*.injectNumCtxForOpenAICompat": "Model Provider Inject num_ctx (OpenAI Compat)",
   "models.providers.*.headers": "Model Provider Headers",
   "models.providers.*.authHeader": "Model Provider Authorization Header",
+  "models.providers.*.timeoutSeconds": "Model Provider Stream Timeout (sec)",
   "models.providers.*.request": "Model Provider Request Overrides",
   "models.providers.*.request.headers": "Model Provider Request Headers",
   "models.providers.*.request.auth": "Model Provider Request Auth Override",
